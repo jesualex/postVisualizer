@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Post Visualizer</string>
+    <string name="postItemFooter">%1$s - %2$s</string>
+</resources>
