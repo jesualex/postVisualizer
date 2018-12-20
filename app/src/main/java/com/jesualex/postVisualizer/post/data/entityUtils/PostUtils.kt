@@ -24,15 +24,26 @@ object PostUtils {
 
     fun getQueryByDate(): Query<Post> {
         return getBox().query().run {
+            equal(Post_.deleted, false)
             orderDesc(Post_.created_at)
         }.build()
     }
 
-    fun add(post: Post) {
+    fun getQueryByDeleted() : Query<Post>{
+        return getBox().query().run {
+            equal(Post_.deleted, true)
+        }.build()
+    }
+
+    fun getPostsDeleted() : MutableList<Post>{
+        return getQueryByDeleted().find()
+    }
+
+    fun put(post: Post) {
         getBox().put(post)
     }
 
-    fun add(posts: MutableList<Post>) {
+    fun put(posts: MutableList<Post>) {
         getBox().put(posts)
     }
 }

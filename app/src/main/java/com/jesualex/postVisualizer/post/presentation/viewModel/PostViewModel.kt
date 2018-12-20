@@ -1,13 +1,10 @@
 package com.jesualex.postVisualizer.post.presentation.viewModel
 
 import android.arch.lifecycle.ViewModel
-import com.jesualex.postVisualizer.App
 import com.jesualex.postVisualizer.post.data.entity.Post
-import com.jesualex.postVisualizer.post.data.entity.Post_
 import com.jesualex.postVisualizer.post.data.entityUtils.PostUtils
 import com.jesualex.postVisualizer.post.domain.PostUseCase
 import com.jesualex.postVisualizer.utils.UseCaseObserver
-import io.objectbox.Box
 import io.objectbox.android.ObjectBoxLiveData
 
 /**
@@ -29,10 +26,22 @@ class PostViewModel() : ViewModel(){
         postUseCase.execute( object : UseCaseObserver<MutableList<Post>>(){
             override fun onNext(value: MutableList<Post>) {
                 super.onNext(value)
-                PostUtils.add(value)
+                value.removeAll(PostUtils.getPostsDeleted())
+                PostUtils.put(value)
             }
         })
 
         return getPostLiveData()
+    }
+
+    fun delete(post : Post){
+        post.deleted = true
+        PostUtils.put(post)
+    }
+
+    fun delete(posts: MutableList<Post>){
+        for (post in posts){
+            delete(post)
+        }
     }
 }

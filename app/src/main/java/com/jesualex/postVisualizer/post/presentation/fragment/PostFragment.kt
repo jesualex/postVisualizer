@@ -7,28 +7,28 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jesualex.postVisualizer.*
 import com.jesualex.postVisualizer.post.data.entity.Post
-import com.jesualex.postVisualizer.post.domain.PostUseCase
+import com.jesualex.postVisualizer.post.data.entityUtils.PostUtils
 import com.jesualex.postVisualizer.post.presentation.adapter.PostAdapter
 import com.jesualex.postVisualizer.post.presentation.viewModel.PostViewModel
-import com.jesualex.postVisualizer.utils.UseCaseObserver
-import io.objectbox.Box
 
 class PostFragment : Fragment() {
     private var columnCount = 1
     private var listener: OnPostClickListener? = null
     private lateinit var adapter : PostAdapter
+    private val postViewModel = PostViewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         adapter = PostAdapter(ArrayList(), listener)
 
-        PostViewModel().get().observe(this, Observer { posts ->
+        postViewModel.get().observe(this, Observer { posts ->
             posts?.let { adapter.setList(it) }
         })
 
@@ -48,6 +48,21 @@ class PostFragment : Fragment() {
                 layoutManager = if (columnCount <= 1) LinearLayoutManager(context) else GridLayoutManager(context, columnCount)
                 adapter = this@PostFragment.adapter
             }
+
+            ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT.or(ItemTouchHelper.RIGHT)) {
+
+                override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
+                    if(p0 is PostAdapter.ViewHolder){
+                        val post = p0.mView.tag as Post
+                        postViewModel.delete(post)
+                    }
+                }
+
+            }).attachToRecyclerView(view)
         }
         return view
     }

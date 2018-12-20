@@ -17,7 +17,12 @@ data class Post(
     val url : String? = "",
     val story_title : String? = "",
     val story_url : String? = "",
-    val author : String? = ""
+    val author : String? = "",
+    var deleted : Boolean = false
 ){
     fun getTime() : String = Utils.getTimeAgo(created_at.time)
+
+    override fun equals(other: Any?): Boolean {
+        return other != null && other is Post && other.objectID == objectID
+    }
 }
