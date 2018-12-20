@@ -7,10 +7,8 @@
         android:layout_height="match_parent"
         tools:context="com.jesualex.postVisualizer.main.presentation.activity.MainActivity">
 
-
-    <fragment
-            android:id="@+id/postFragment"
+    <FrameLayout
+            android:id="@+id/fragmentContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.jesualex.postVisualizer.post.presentation.fragment.PostFragment"/>
+            android:layout_height="match_parent"/>
 </android.support.constraint.ConstraintLayout>

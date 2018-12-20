@@ -7,8 +7,6 @@
         android:name="com.jesualex.reingtest.PostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         tools:context=".post.presentation.fragment.PostFragment"
         tools:listitem="@layout/fragment_post"/>
