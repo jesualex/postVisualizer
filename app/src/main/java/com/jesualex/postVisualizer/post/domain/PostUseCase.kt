@@ -12,7 +12,6 @@ import io.reactivex.functions.Function
  */
 
 class PostUseCase : UseCase<MutableList<Post>>() {
-    
     override fun createObservableUseCase(): Observable<MutableList<Post>> {
         return PostApi.get().searchByDate("android").map(Function<PostList, MutableList<Post>> {
             return@Function it.hits

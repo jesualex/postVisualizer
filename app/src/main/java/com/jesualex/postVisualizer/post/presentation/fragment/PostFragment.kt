@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -13,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.jesualex.postVisualizer.*
 import com.jesualex.postVisualizer.post.data.entity.Post
-import com.jesualex.postVisualizer.post.data.entityUtils.PostUtils
 import com.jesualex.postVisualizer.post.presentation.adapter.PostAdapter
 import com.jesualex.postVisualizer.post.presentation.viewModel.PostViewModel
 
@@ -28,7 +28,7 @@ class PostFragment : Fragment() {
 
         adapter = PostAdapter(ArrayList(), listener)
 
-        postViewModel.get().observe(this, Observer { posts ->
+        postViewModel.getAndUpdate().observe(this, Observer { posts ->
             posts?.let { adapter.setList(it) }
         })
 
@@ -42,9 +42,10 @@ class PostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_post_list, container, false)
+        val postList = view.findViewById(R.id.postList) as? RecyclerView
 
-        if (view is RecyclerView) {
-            with(view) {
+        postList?.let {
+            with(postList) {
                 layoutManager = if (columnCount <= 1) LinearLayoutManager(context) else GridLayoutManager(context, columnCount)
                 adapter = this@PostFragment.adapter
             }
@@ -62,8 +63,19 @@ class PostFragment : Fragment() {
                     }
                 }
 
-            }).attachToRecyclerView(view)
+            }).attachToRecyclerView(postList)
         }
+
+        if(view is SwipeRefreshLayout){
+            postViewModel.setRefreshListener {
+                view.isRefreshing = false
+            }
+
+            view.setOnRefreshListener {
+                postViewModel.refresh()
+            }
+        }
+
         return view
     }
 

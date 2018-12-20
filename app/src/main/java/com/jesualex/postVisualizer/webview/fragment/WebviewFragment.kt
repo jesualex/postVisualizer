@@ -1,4 +1,4 @@
-package com.jesualex.postVisualizer.webview
+package com.jesualex.postVisualizer.webview.fragment
 
 
 import android.os.Bundle

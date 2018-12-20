@@ -18,7 +18,8 @@ abstract class UseCase<T> {
 
     fun execute(disposableObserver: UseCaseObserver<T>?) {
         disposableObserver?.let {
-            val observable = createObservableUseCase().subscribeOn(subscribeOn).observeOn(observeOn)
+
+            val observable = this.observable.subscribeOn(subscribeOn).observeOn(observeOn)
             val observer = observable.subscribeWith(disposableObserver)
             compositeDisposable.add(observer)
         }

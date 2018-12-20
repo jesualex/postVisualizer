@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.jesualex.postVisualizer.post.data.entity.Post
 import com.jesualex.postVisualizer.post.presentation.fragment.PostFragment
 import com.jesualex.postVisualizer.R
-import com.jesualex.postVisualizer.webview.WebviewFragment
+import com.jesualex.postVisualizer.webview.fragment.WebviewFragment
 
 class MainActivity : AppCompatActivity(), PostFragment.OnPostClickListener {
     lateinit var webViewFragment: WebviewFragment
@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity(), PostFragment.OnPostClickListener {
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setDisplayShowHomeEnabled(false)
         return true
     }
 }
