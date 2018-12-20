@@ -1,5 +1,6 @@
 package com.jesualex.postVisualizer.post.presentation.fragment
 
+import android.arch.lifecycle.Observer
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,23 +14,24 @@ import com.jesualex.postVisualizer.*
 import com.jesualex.postVisualizer.post.data.entity.Post
 import com.jesualex.postVisualizer.post.domain.PostUseCase
 import com.jesualex.postVisualizer.post.presentation.adapter.PostAdapter
+import com.jesualex.postVisualizer.post.presentation.viewModel.PostViewModel
 import com.jesualex.postVisualizer.utils.UseCaseObserver
+import io.objectbox.Box
 
 class PostFragment : Fragment() {
     private var columnCount = 1
     private var listener: OnPostClickListener? = null
-    private lateinit var postUseCase : PostUseCase
-    private var adapter : PostAdapter? = null
+    private lateinit var adapter : PostAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        postUseCase = PostUseCase()
-        postUseCase.execute( object : UseCaseObserver<MutableList<Post>>(){
-            override fun onNext(value: MutableList<Post>) {
-                super.onNext(value)
-                adapter?.setList(value)
-            }
+
+        adapter = PostAdapter(ArrayList(), listener)
+
+        PostViewModel().get().observe(this, Observer { posts ->
+            posts?.let { adapter.setList(it) }
         })
+
         arguments?.let {
             columnCount = it.getInt(argColumnCount)
         }
@@ -44,9 +46,6 @@ class PostFragment : Fragment() {
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = if (columnCount <= 1) LinearLayoutManager(context) else GridLayoutManager(context, columnCount)
-                val list = MutableList(4){ Post(title = "asjhfbbfahjv ashjgdvs") }
-                this@PostFragment.adapter =
-                        PostAdapter(list, listener)
                 adapter = this@PostFragment.adapter
             }
         }

@@ -14,17 +14,14 @@ interface PostApi{
 
     companion object {
         private const val URL = "https://hn.algolia.com/api/v1/"
-        private var API : PostApi? = null
+        private lateinit var API : PostApi
 
         fun get() : PostApi {
-            return API ?: run {
-                API =
-                        ApiServiceFactory.build(
-                            PostApi::class.java,
-                            URL
-                        )
-                return API as PostApi
+            if(!::API.isInitialized){
+                API = ApiServiceFactory.build(PostApi::class.java, URL)
             }
+
+            return API
         }
     }
 }

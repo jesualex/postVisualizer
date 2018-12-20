@@ -11,13 +11,13 @@ import java.util.*
 
 @Entity
 data class Post(
-    @Id var story_id: Long = 0,
+    @Id(assignable = true) var objectID: Long = 0,
     val created_at: Date = Calendar.getInstance().time,
-    val title : String = "",
-    val url : String = "",
-    val story_title : String = "",
-    val story_url : String = "",
-    val author : String = ""
+    val title : String? = "",
+    val url : String? = "",
+    val story_title : String? = "",
+    val story_url : String? = "",
+    val author : String? = ""
 ){
     fun getTime() : String = Utils.getTimeAgo(created_at.time)
 }
